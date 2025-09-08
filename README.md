@@ -9,7 +9,7 @@ The structure of the Docker Compose file includes elements such as:
 
 * `name `– It defines the project name to use for the entire application stack. When this is not set, Docker compose uses a default project name.
 
-* `services` – This top section defines each containerized service required for the application. In Docker Compose, every component of the application operates as a separate service, with each service running a single container.    
+* `services` – This section defines each containerized service required for the application. In Docker Compose, every component of the application operates as a separate service, with each service running a single container.    
   Each service is defined as a separate block with a name and its configuration options such as:
   * `container_name`: It is used to specify a user-friendly name for the container on the host machine.
   * `image`: It specifies the Docker image to use for the container and this image is pulled from the Docker Hub or any other registry.
@@ -27,7 +27,7 @@ The structure of the Docker Compose file includes elements such as:
   * `ports`: It maps or publishes the ports from the host machine to the container’s internal ports, making the service accessible from outside the container. By default, containers are isolated from the host's network, so ports acts as a firewall rule to forward network traffic to the correct service. This is specified as list of strings in either HOST_PORT:CONTAINER_PORT format or CONTAINER_PORT format. When only container port is specified, it pubishes to a random available port on the host, avoiding conflicts.
   * `expose`: It defines the port or range of ports that are exposed from the container for internal communication between services running on the same Docker network without actually publishing or mapping the port to the host.
   * `volumes`: It attaches persistent storage to a service so that data is accessible even when a container is stopped or removed. It can be defined in three ways:
-     * using NAMED_VOLUME:CONTAINER_PATH format along with additional access mode (`rw`, `ro`, `z`, `Z`) such as NAMED_VOLUME:CONTAINER_PATH format:ACCESS_MODE or
+     * using NAMED_VOLUME:CONTAINER_PATH format along with additional access mode (`rw`, `ro`, `z`, `Z`) such as NAMED_VOLUME:CONTAINER_PATH:ACCESS_MODE format or
      * using bind mounts by mapping file paths from the host machine to the container in HOST_PATH:CONTAINER_PATH format or
      * using a more verbose long syntax for finer control by specifying addition configuration options such as `type` _(which defines volume type such as `volume`, `bind`, `tmpfs`, or `npipe`)_, `source` _(which defines host path)_, `target` _(which defines container path)_, `read_only` _(which sets the volume as read-only)_, etc. 
   * `working_dir`: It is used to set the working directory inside the container for the service. It is equivalent to the `--workdir` flag in a `docker run` command and overrides `WORKDIR` instruction specified for the container image in `Dockerfile`.
@@ -43,7 +43,7 @@ The structure of the Docker Compose file includes elements such as:
     * `disable` which defines if health check to be disabled. It accepts `true` or `false` values.
     
 	This configuration overrides the `HEALTHCHECK` instruction specified for the container image in `Dockerfile`.
-  * `depends_on`: It is used to define dependencies between services to controll the startup order of services. It ensures that one service starts only after its dependent services are up and running.  
+  * `depends_on`: It is used to define dependencies between services to control the startup order of services. It ensures that one service starts only after its dependent services are up and running.  
     It can have additional options such as:
     * `restart` which defines to restart this service after it updates the dependency service.
     * `condition` which defines to look for the condition of dependency service before starting this service and it can have values such as `service_started`, `service_healthy` or `service_completed_successfully`.
@@ -94,7 +94,11 @@ Each network is defined as a separate block with a name and configuration option
   * `driver`:  It is used to specify the network driver to use such as `bridge` (default for local networks) or `overlay` (for multi-host communication in Docker Swarm).
   * `driver_opts`: It allows to define driver-specific options when creating a network. These options are passed directly to the chosen network driver, such as `bridge` or `overlay`, allowing for granular control over network behavior.
   * `attachable`: It is used to enable the standalone containers to attach to an `overlay` network along with the service containers if this is set to `true`. If a standalone container attaches to the network, it can communicate with services and other standalone containers that are also attached to the network.
-  * `ipam`: It allows for custom IP Address Management (IPAM) configurations, such as the network-level IP settings including subnets and IP ranges to get more control over IP address space assigned to services. It uses additional options such as `driver`, `config`, `options`.
+  * `ipam`: It is used for custom IP Address Management (IPAM) configurations, such as the network-level IP settings including subnets and IP ranges to get more control over IP address space assigned to services. It uses additional options such as `driver`, `config`, `options`.
+    It can have additional options such as
+    * `driver` which specifies a custom IPAM driver
+    * `config` which specifies a list that defines one or more IP address pools for the network. Each item in the list can specify detailed configurations such as `subnet` _(specifies the network segment in CIDR format (e.g., 172.20.0.0/16) from which IP addresses will be allocated)_, `ip_range` _(defines a sub-range within the specified subnet from which container IPs should be allocated)_, `gateway` _(sets the IPv4 or IPv6 gateway for the network)_ and `aux_addresses` _(specifies auxiliary IPv4 or IPv6 addresses for specific hosts on the network, given as a key-value mapping)_
+    * `options` which defines a key-value map for passing driver-specific options to the IPAM driver
   * `external`: It allows to connect to an external network created outside of the Docker compose.
   * `internal`: It creates an isolated network from external networks when this option is set to `true`, making it a "back-end" network for services like databases that should not be publicly exposed. By default, Docker compose provides external connectivity to networks.
   * `labels`: It is used to add metadata to custom networks. This does not affect the network's runtime behavior directly, but useful for organization, filtering, and enabling automation with third-party tools. 
