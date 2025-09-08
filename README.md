@@ -1,7 +1,7 @@
 # DOCKER COMPOSE FILE STRUCTURE
 Docker Compose tool looks for the docker compose file named `compose.yaml` (preferred) or `compose.yml` in the current working directory. If it does not exist, it looks for at least the file named 
 `docker-compose.yaml` or `docker-compose.yml` in the current working directory. This compose file contains the definition of all services that make up the application, along with their dependencies and 
-configurations. It is imperative to understand [YAML's syntax](https://github.com/srimarrivada/YAML-Introduction) before creating a Docker Compose file, as proper indentation must be followed for defining the Compose's hierarchical structure.
+configurations. It is imperative to understand [YAML's syntax](https://github.com/srimarrivada/YAML-Syntax) before creating a Docker Compose file, as proper indentation must be followed for defining the Compose's hierarchical structure.
 
 The structure of the Docker Compose file includes elements such as:
 * `version` – It specifies the version of the Docker Compose file format. It is typically defined at the top of the file.
